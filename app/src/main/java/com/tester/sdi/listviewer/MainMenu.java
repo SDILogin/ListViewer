@@ -83,7 +83,11 @@ public class MainMenu extends Activity
         getActionBar().setSubtitle("Курск");
         getActionBar().setTitle("ЖарПицца");
 
-        getActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
+        int c = getResources().getColor(R.color.actionbar_background);
+        getActionBar().setBackgroundDrawable(new ColorDrawable(c));
+        getActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setDisplayShowTitleEnabled(true);
+
     }
 
 

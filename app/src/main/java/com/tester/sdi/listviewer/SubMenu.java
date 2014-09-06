@@ -40,7 +40,8 @@ public class SubMenu extends Activity{
         getActionBar().setSubtitle("Курск");
         getActionBar().setTitle(getIntent().getExtras().getString("MenuType","Menu"));
 
-        getActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
+        int c = getResources().getColor(R.color.actionbar_background);
+        getActionBar().setBackgroundDrawable(new ColorDrawable(c));
 
         subMenuIndex = getIntent().getExtras().getInt("SubListNumber",subMenuIndex);
         chunks = JSONParser.getSubMenuChunks().get(subMenuIndex);
