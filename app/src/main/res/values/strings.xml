@@ -11,5 +11,6 @@
     <string name="action_settings">Settings</string>
 
     <color name="actionbar_background">#FB1522</color>
+    <color name="WHITE">#ffffff</color>
 
 </resources>
