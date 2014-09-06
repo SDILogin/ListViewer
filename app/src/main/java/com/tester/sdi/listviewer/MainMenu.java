@@ -6,10 +6,14 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Entity;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +24,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 
 
 public class MainMenu extends Activity
@@ -51,6 +66,8 @@ public class MainMenu extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        new JSONStringGetter().execute();
     }
 
     @Override
@@ -156,4 +173,36 @@ public class MainMenu extends Activity
         }
     }
 
+    private class JSONStringGetter extends AsyncTask<Void, Void, Void>{
+
+        String url = "http://zharpizzatestcase.apiary-mock.com/products";
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            DefaultHttpClient client = new DefaultHttpClient();
+            HttpGet getRequest = new HttpGet(url);
+
+            HttpResponse response = null;
+            try {
+                response = client.execute(getRequest);
+
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode == HttpStatus.SC_OK) {
+                    // 200+
+                    HttpEntity entity = response.getEntity();
+                    String json = EntityUtils.toString(entity, "windows-1252"); // ???
+
+                    JSONParser.setJSONString(json);
+                }
+            } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            JSONParser.isRefreshFinished = true;
+        }
+    }
 }

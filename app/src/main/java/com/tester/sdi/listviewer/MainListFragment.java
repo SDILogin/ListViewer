@@ -144,27 +144,37 @@ public class MainListFragment extends ListFragment{
 
         @Override
         protected void onPreExecute() {
-            parser = new JSONParser();
-
-            urls = parser.getMainMenuPicSource();
         }
 
         @Override
         protected Void doInBackground(Void... p) {
+            while (JSONParser.isRefreshFinished == false){
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //parser = new JSONParser();
+            JSONParser.Parse();
+            urls = JSONParser.getMainMenuPicSource();
+
+
             // main menu
             for (String url : urls){
                 complete.add(download(url));
             }
 
             // submenu
-            List<ArrayList<String>> subMenuUrls = JSONParser.getSubMenuPicSources();
+            /*List<ArrayList<String>> subMenuUrls = JSONParser.getSubMenuPicSources();
             for (int i=0; i<subMenuUrls.size(); ++i){
                 List<String> currentURLList = subMenuUrls.get(i);
                 for (String url : currentURLList){
                     JSONParser.AddBitmap(download(url), i);
                 }
             }
-
+*/
             return null;
         }
 

@@ -13,6 +13,8 @@ import java.util.List;
  * Created by sdi on 06.09.14.
  */
 public class JSONParser {
+    public static boolean isRefreshFinished = false;
+
     private static List<String> mainMenuNames = new ArrayList<String>();
     private static List<String> mainMenuPicSource = new ArrayList<String>();
     private static List<Integer> mainMenuItemSize = new ArrayList<Integer>();
@@ -23,7 +25,7 @@ public class JSONParser {
     private static List<ArrayList<Bitmap>> subMenuBitmaps = new ArrayList<ArrayList<Bitmap>>();
     private static List<ArrayList<String>> subMenuPicSources = new ArrayList<ArrayList<String>>();
 
-    private final String toParse = "{'menu':{'count':2,'menuitems':["+
+    private static String toParse = "{'menu':{'count':2,'menuitems':["+
             "{'name':'pizza','src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg',"+
                 " 'count':3,'submenu':[{'name':'italia', 'price':55, 'chunk':'chunk', 'src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg'},"+
                                       "{'name':'prima', 'price':54, 'chunk':'full', 'src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg'},"+
@@ -42,8 +44,32 @@ public class JSONParser {
     public static List<ArrayList<Bitmap>> getSubMenuBitmaps(){return subMenuBitmaps;}
 
 
+    public static void setJSONString (String json){
+        toParse = json;
+    }
     public static void AddBitmap(Bitmap bmp ,int pos){
         subMenuBitmaps.get(pos).add(bmp);
+    }
+
+    public static void Parse(){
+        try {
+            mainMenuPicSource.clear();
+
+            JSONArray rootArr = new JSONArray(toParse);
+
+            int n = rootArr.length();
+            for (int i=0;i<n;++i){
+                String url = rootArr.getJSONObject(i).getString("thumb_url");
+                String name = rootArr.getJSONObject(i).getString("name");
+                String id = rootArr.getJSONObject(i).getString("id");
+
+                mainMenuNames.add(name);
+                mainMenuItemSize.add(Integer.parseInt(id));
+                mainMenuPicSource.add(url);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public JSONParser (){
