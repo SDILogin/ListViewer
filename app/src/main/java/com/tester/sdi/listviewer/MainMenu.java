@@ -13,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -36,6 +38,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 
 
 public class MainMenu extends Activity
@@ -190,7 +193,7 @@ public class MainMenu extends Activity
                 if (statusCode == HttpStatus.SC_OK) {
                     // 200+
                     HttpEntity entity = response.getEntity();
-                    String json = EntityUtils.toString(entity, "windows-1252"); // ???
+                    String json = EntityUtils.toString(entity, "utf-8"); // ???
 
                     JSONParser.setJSONString(json);
                 }
