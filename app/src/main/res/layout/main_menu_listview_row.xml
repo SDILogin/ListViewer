@@ -16,7 +16,8 @@
         android:id="@+id/id_tv_mainmenu_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/id_iv_mainmenu_pic"
+        android:layout_marginLeft="10dp"
         android:layout_centerVertical="true"
         android:text="123"
         android:textSize="20sp"/>
