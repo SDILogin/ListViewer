@@ -28,9 +28,17 @@
         android:layout_height="15dp"
         android:gravity="center"
         android:textSize="10sp"
-        android:layout_margin="10dp"
+        android:layout_marginRight="10dp"
         android:text="10"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@+id/id_iv_forward_arrow_mainmenu"
         android:layout_centerVertical="true"
         />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/forward_arrow"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/id_iv_forward_arrow_mainmenu"/>
 </RelativeLayout>
