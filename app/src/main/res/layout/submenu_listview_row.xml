@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_height="45dp"
+        android:layout_width="45dp"
+        android:id="@+id/id_iv_food_pic_submenu"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FOOD NAME"
+        android:textSize="20sp"
+        android:id="@+id/id_tv_food_name"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/id_iv_food_pic_submenu"
+        />
+
+    <LinearLayout
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/id_tv_food_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="45rub"/>
+
+        <TextView
+            android:id="@+id/id_tv_food_chunk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="chunk"/>
+    </LinearLayout>
+
+</RelativeLayout>
