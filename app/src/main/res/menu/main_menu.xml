@@ -6,11 +6,6 @@
         android:title=""
         android:showAsAction="ifRoom" />
 
-    <item
-        android:title=""
-        android:actionViewClass="android.widget.SearchView"
-        android:showAsAction="ifRoom"
-        />
     <item android:id="@+id/action_example"
         android:icon="@drawable/box"
         android:title=""

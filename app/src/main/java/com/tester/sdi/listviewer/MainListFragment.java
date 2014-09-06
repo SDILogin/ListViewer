@@ -35,6 +35,7 @@ import java.util.List;
 public class MainListFragment extends ListFragment{
 
     MainMenuAdapter adapter ;
+    JSONParser parser = null;
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -48,7 +49,27 @@ public class MainListFragment extends ListFragment{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        new ImageDownloader().execute();
+        if (JSONParser.isFirstRun == true) {
+            new ImageDownloader().execute();
+            JSONParser.isFirstRun = false;
+        } else {
+            udpateListView();
+        }
+    }
+
+    public void udpateListView(){
+        adapter = new MainMenuAdapter(getActivity().getBaseContext());
+        List<Integer> subListSizes = parser.getMainMenuItemSize();
+        List<String> names = parser.getMainMenuNames();
+
+        List<Bitmap> bitmaps = JSONParser.getMainMenuBitmaps();
+        for (int i=0; i<bitmaps.size(); ++i){
+            String name = names.get(i);
+            int subMenuItemsCount = subListSizes.get(i);
+            adapter.Add(new MainMenuItem(name, subMenuItemsCount, bitmaps.get(i)));
+        }
+
+        setListAdapter(adapter);
     }
 
     class MainMenuItem{
@@ -136,11 +157,7 @@ public class MainListFragment extends ListFragment{
 
     class ImageDownloader extends AsyncTask<Void, Void, Void>{
 
-        List<Bitmap> complete = new ArrayList<Bitmap>();
-
         List<String> urls = new ArrayList<String>();
-
-        JSONParser parser = null;
 
         @Override
         protected void onPreExecute() {
@@ -163,7 +180,7 @@ public class MainListFragment extends ListFragment{
 
             // main menu
             for (String url : urls){
-                complete.add(download(url));
+                JSONParser.AddMainMenuBitmap(download(url));
             }
 
             // submenu
@@ -216,20 +233,7 @@ public class MainListFragment extends ListFragment{
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            adapter = new MainMenuAdapter(getActivity().getBaseContext());
-            List<Integer> subListSizes = parser.getMainMenuItemSize();
-            List<String> names = parser.getMainMenuNames();
-
-            Bitmap bmp = null;
-            for (int i=0; i<complete.size(); ++i){
-                String name = names.get(i);
-                int subMenuItemsCount = subListSizes.get(i);
-                bmp = complete.get(i);
-                adapter.Add(new MainMenuItem(name, subMenuItemsCount, bmp));
-            }
-
-
-            setListAdapter(adapter);
+             udpateListView();
         }
     }
 }

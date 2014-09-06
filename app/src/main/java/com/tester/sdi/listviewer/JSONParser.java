@@ -14,10 +14,12 @@ import java.util.List;
  */
 public class JSONParser {
     public static boolean isRefreshFinished = false;
+    public static boolean isFirstRun = true;
 
     private static List<String> mainMenuNames = new ArrayList<String>();
     private static List<String> mainMenuPicSource = new ArrayList<String>();
     private static List<Integer> mainMenuItemSize = new ArrayList<Integer>();
+    private static List<Bitmap> mainMenuBitmaps = new ArrayList<Bitmap>();
 
     private static List<ArrayList<String>> subMenuNames = new ArrayList<ArrayList<String>>();
     private static List<ArrayList<Float>> subMenuPrices = new ArrayList<ArrayList<Float>>();
@@ -43,6 +45,10 @@ public class JSONParser {
     public static List<ArrayList<String>> getSubMenuPicSources(){return subMenuPicSources;}
     public static List<ArrayList<Bitmap>> getSubMenuBitmaps(){return subMenuBitmaps;}
 
+    public static void AddMainMenuBitmap(Bitmap bmp){
+        mainMenuBitmaps.add(bmp);
+    }
+    public static List<Bitmap> getMainMenuBitmaps(){return mainMenuBitmaps;}
 
     public static void setJSONString (String json){
         toParse = json;

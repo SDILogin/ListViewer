@@ -44,7 +44,7 @@ import java.nio.charset.Charset;
 public class MainMenu extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    MainListFragment mainListFragment = new MainListFragment();;
+    MainListFragment mainListFragment = new MainListFragment();
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -182,7 +182,7 @@ public class MainMenu extends Activity
 
         @Override
         protected Void doInBackground(Void... params) {
-            DefaultHttpClient client = new DefaultHttpClient();
+           DefaultHttpClient client = new DefaultHttpClient();
             HttpGet getRequest = new HttpGet(url);
 
             HttpResponse response = null;
@@ -199,7 +199,8 @@ public class MainMenu extends Activity
                 }
             } catch (IOException e) {
                     e.printStackTrace();
-                }
+            }
+
             return null;
         }
 
