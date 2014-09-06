@@ -43,6 +43,10 @@ public class SubMenu extends Activity{
         int c = getResources().getColor(R.color.actionbar_background);
         getActionBar().setBackgroundDrawable(new ColorDrawable(c));
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (true) return;
+
         subMenuIndex = getIntent().getExtras().getInt("SubListNumber",subMenuIndex);
         chunks = JSONParser.getSubMenuChunks().get(subMenuIndex);
         names = JSONParser.getSubMenuNames().get(subMenuIndex);
@@ -61,7 +65,6 @@ public class SubMenu extends Activity{
 
         ((ListView) findViewById(R.id.id_lv_submenu)).setAdapter(adapter);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     class SubMenuItem{

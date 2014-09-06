@@ -22,6 +22,7 @@
         android:textSize="20sp"/>
 
     <TextView
+        android:background="@drawable/textview_background"
         android:id="@+id/id_tv_mainmenu_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
