@@ -43,6 +43,7 @@ public class MainListFragment extends ListFragment{
         i.putExtra("SubListNumber", position);
         i.putExtra("MenuType", ((TextView)v.findViewById(R.id.id_tv_mainmenu_name)).getText().toString());
         startActivity(i);
+        getActivity().overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
     }
 
     @Override

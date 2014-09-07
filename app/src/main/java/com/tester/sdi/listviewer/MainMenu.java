@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 
@@ -178,11 +179,11 @@ public class MainMenu extends Activity
 
     private class JSONStringGetter extends AsyncTask<Void, Void, Void>{
 
-        String url = "http://zharpizzatestcase.apiary-mock.com/products";
+        final String url = "http://zharpizzatestcase.apiary-mock.com/products";
 
         @Override
         protected Void doInBackground(Void... params) {
-           DefaultHttpClient client = new DefaultHttpClient();
+            DefaultHttpClient client = new DefaultHttpClient();
             HttpGet getRequest = new HttpGet(url);
 
             HttpResponse response = null;
@@ -198,7 +199,14 @@ public class MainMenu extends Activity
                     JSONParser.setJSONString(json);
                 }
             } catch (IOException e) {
-                    e.printStackTrace();
+                Log.d("JSON", "check your internet connection. Default json string will be used");
+
+                try {
+                    String json = new String(GlobalData.JSONDefault.getBytes("windows-1252"), "UTF-8");
+                    JSONParser.setJSONString(json);
+                } catch (UnsupportedEncodingException e1) {
+                    e1.printStackTrace();
+                }
             }
 
             return null;

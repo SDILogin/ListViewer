@@ -36,6 +36,8 @@ public class SubMenu extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submenu);
 
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+
         getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setSubtitle("Курск");
         getActionBar().setTitle(getIntent().getExtras().getString("MenuType","Menu"));

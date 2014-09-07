@@ -61,7 +61,7 @@ public class JSONParser {
         try {
             mainMenuPicSource.clear();
 
-            JSONArray rootArr = new JSONArray(toParse);
+             JSONArray rootArr = new JSONArray(toParse);
 
             int n = rootArr.length();
             for (int i=0;i<n;++i){
