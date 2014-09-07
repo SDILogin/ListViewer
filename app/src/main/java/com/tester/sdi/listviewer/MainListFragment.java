@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,6 @@ import java.util.List;
 public class MainListFragment extends ListFragment{
 
     MainMenuAdapter adapter ;
-    JSONParser parser = null;
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -60,10 +60,10 @@ public class MainListFragment extends ListFragment{
 
     public void udpateListView(){
         adapter = new MainMenuAdapter(getActivity().getBaseContext());
-        List<Integer> subListSizes = parser.getMainMenuItemSize();
-        List<String> names = parser.getMainMenuNames();
+        List<Integer> subListSizes = GlobalData.mParser.getMainMenuItemSize();
+        List<String> names = GlobalData.mParser.getMainMenuNames();
 
-        List<Bitmap> bitmaps = JSONParser.getMainMenuBitmaps();
+        List<Bitmap> bitmaps = GlobalData.mParser.getMainMenuBitmaps();
         for (int i=0; i<bitmaps.size(); ++i){
             String name = names.get(i);
             int subMenuItemsCount = subListSizes.get(i);
@@ -166,7 +166,7 @@ public class MainListFragment extends ListFragment{
 
         @Override
         protected Void doInBackground(Void... p) {
-            while (JSONParser.isRefreshFinished == false){
+            while (GlobalData.mParser.isRefreshFinished == false){
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -174,18 +174,18 @@ public class MainListFragment extends ListFragment{
                 }
             }
 
-            //parser = new JSONParser();
-            JSONParser.Parse();
-            urls = JSONParser.getMainMenuPicSource();
+            //parser = new GlobalData.mParser();
+            GlobalData.mParser.Parse();
+            urls = GlobalData.mParser.getMainMenuPicSource();
 
 
             // main menu
             for (String url : urls){
-                JSONParser.AddMainMenuBitmap(download(url));
+                GlobalData.mParser.AddMainMenuBitmap(download(url));
             }
 
             // submenu
-            /*List<ArrayList<String>> subMenuUrls = JSONParser.getSubMenuPicSources();
+            /*List<ArrayList<String>> subMenuUrls = GlobalData.mParser.getSubMenuPicSources();
             for (int i=0; i<subMenuUrls.size(); ++i){
                 List<String> currentURLList = subMenuUrls.get(i);
                 for (String url : currentURLList){

@@ -49,7 +49,7 @@ public class SubMenu extends Activity{
 
         if (true) return;
 
-        subMenuIndex = getIntent().getExtras().getInt("SubListNumber",subMenuIndex);
+/*        subMenuIndex = getIntent().getExtras().getInt("SubListNumber",subMenuIndex);
         chunks = JSONParser.getSubMenuChunks().get(subMenuIndex);
         names = JSONParser.getSubMenuNames().get(subMenuIndex);
         prices = JSONParser.getSubMenuPrices().get(subMenuIndex);
@@ -66,7 +66,7 @@ public class SubMenu extends Activity{
         }
 
         ((ListView) findViewById(R.id.id_lv_submenu)).setAdapter(adapter);
-
+*/
     }
 
     class SubMenuItem{

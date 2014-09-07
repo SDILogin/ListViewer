@@ -1,11 +1,18 @@
 package com.tester.sdi.listviewer;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,18 +23,18 @@ public class JSONParser {
     public static boolean isRefreshFinished = false;
     public static boolean isFirstRun = true;
 
-    private static List<String> mainMenuNames = new ArrayList<String>();
-    private static List<String> mainMenuPicSource = new ArrayList<String>();
-    private static List<Integer> mainMenuItemSize = new ArrayList<Integer>();
-    private static List<Bitmap> mainMenuBitmaps = new ArrayList<Bitmap>();
+    private List<String> mainMenuNames = new ArrayList<String>();
+    private List<String> mainMenuPicSource = new ArrayList<String>();
+    private List<Integer> mainMenuItemSize = new ArrayList<Integer>();
+    private List<Bitmap> mainMenuBitmaps = new ArrayList<Bitmap>();
 
-    private static List<ArrayList<String>> subMenuNames = new ArrayList<ArrayList<String>>();
-    private static List<ArrayList<Float>> subMenuPrices = new ArrayList<ArrayList<Float>>();
-    private static List<ArrayList<String>> subMenuChunks = new ArrayList<ArrayList<String>>();
-    private static List<ArrayList<Bitmap>> subMenuBitmaps = new ArrayList<ArrayList<Bitmap>>();
-    private static List<ArrayList<String>> subMenuPicSources = new ArrayList<ArrayList<String>>();
+    private List<ArrayList<String>> subMenuNames = new ArrayList<ArrayList<String>>();
+    private List<ArrayList<Float>> subMenuPrices = new ArrayList<ArrayList<Float>>();
+    private List<ArrayList<String>> subMenuChunks = new ArrayList<ArrayList<String>>();
+    private List<ArrayList<Bitmap>> subMenuBitmaps = new ArrayList<ArrayList<Bitmap>>();
+    private List<ArrayList<String>> subMenuPicSources = new ArrayList<ArrayList<String>>();
 
-    private static String toParse = "{'menu':{'count':2,'menuitems':["+
+    private String toParse = "{'menu':{'count':2,'menuitems':["+
             "{'name':'pizza','src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg',"+
                 " 'count':3,'submenu':[{'name':'italia', 'price':55, 'chunk':'chunk', 'src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg'},"+
                                       "{'name':'prima', 'price':54, 'chunk':'full', 'src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg'},"+
@@ -35,29 +42,75 @@ public class JSONParser {
             "{'name':'drink', 'src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg',"+
                 "'count':0,'submenu':[]}]}}";
 
-    public static List<String> getMainMenuNames(){return mainMenuNames;}
-    public static List<String> getMainMenuPicSource(){return mainMenuPicSource;}
-    public static List<Integer> getMainMenuItemSize(){return mainMenuItemSize;}
+    public List<String> getMainMenuNames(){return mainMenuNames;}
+    public List<String> getMainMenuPicSource(){return mainMenuPicSource;}
+    public List<Integer> getMainMenuItemSize(){return mainMenuItemSize;}
 
-    public static List<ArrayList<String>> getSubMenuNames(){return subMenuNames;}
-    public static List<ArrayList<Float>> getSubMenuPrices(){return subMenuPrices;}
-    public static List<ArrayList<String>> getSubMenuChunks(){return subMenuChunks;}
-    public static List<ArrayList<String>> getSubMenuPicSources(){return subMenuPicSources;}
-    public static List<ArrayList<Bitmap>> getSubMenuBitmaps(){return subMenuBitmaps;}
+    public List<ArrayList<String>> getSubMenuNames()     {return subMenuNames;}
+    public List<ArrayList<Float>>  getSubMenuPrices()    {return subMenuPrices;}
+    public List<ArrayList<String>> getSubMenuChunks()    {return subMenuChunks;}
+    public List<ArrayList<String>> getSubMenuPicSources(){return subMenuPicSources;}
+    public List<ArrayList<Bitmap>> getSubMenuBitmaps()   {return subMenuBitmaps;}
 
-    public static void AddMainMenuBitmap(Bitmap bmp){
-        mainMenuBitmaps.add(bmp);
-    }
-    public static List<Bitmap> getMainMenuBitmaps(){return mainMenuBitmaps;}
-
-    public static void setJSONString (String json){
+    public void setJSONString (String json){
         toParse = json;
     }
-    public static void AddBitmap(Bitmap bmp ,int pos){
+    public void AddBitmap(Bitmap bmp ,int pos){
         subMenuBitmaps.get(pos).add(bmp);
     }
 
-    public static void Parse(){
+    public List<Bitmap> getMainMenuBitmaps(){return mainMenuBitmaps;}
+    public void AddMainMenuBitmap(Bitmap bmp){
+        mainMenuBitmaps.add(bmp);
+    }
+    public void AddMainMenuBitmap(Bitmap bmp, String name){
+        if (bmp != null) {
+            mainMenuBitmaps.add(bmp);
+            saveBitmapToFile(bmp, name);
+        } else{
+            mainMenuBitmaps.add(loadBitmapFromFile(name));
+        }
+    }
+
+    private void saveBitmapToFile(Bitmap bmp, String name){
+        String basePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/images";
+        File baseDir = new File(basePath);
+        if(!baseDir.exists()){
+            // directory not exists
+            baseDir.mkdirs();
+        }
+
+        File fBmp = new File(baseDir, name + ".png");
+        try {
+            FileOutputStream fout = new FileOutputStream(fBmp);
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, fout);
+
+            fout.flush();
+            fout.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Bitmap loadBitmapFromFile(String name){
+        String basePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/images";
+        File baseDir = new File(basePath);
+        if(baseDir.exists()) {
+            File fBmp = new File(baseDir, name+".png");
+            Bitmap bmp = null;
+            if (fBmp.exists())
+                bmp = BitmapFactory.decodeFile(fBmp.getAbsolutePath());
+
+            return bmp;
+        } else {
+            return null;
+        }
+    }
+
+    public void Parse(){
         try {
             mainMenuPicSource.clear();
 

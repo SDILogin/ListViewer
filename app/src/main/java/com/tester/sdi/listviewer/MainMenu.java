@@ -194,16 +194,16 @@ public class MainMenu extends Activity
                 if (statusCode == HttpStatus.SC_OK) {
                     // 200+
                     HttpEntity entity = response.getEntity();
-                    String json = EntityUtils.toString(entity, "utf-8"); // ???
+                    String json = EntityUtils.toString(entity, "utf-8");
 
-                    JSONParser.setJSONString(json);
+                    GlobalData.mParser.setJSONString(json);
                 }
             } catch (IOException e) {
                 Log.d("JSON", "check your internet connection. Default json string will be used");
 
                 try {
                     String json = new String(GlobalData.JSONDefault.getBytes("windows-1252"), "UTF-8");
-                    JSONParser.setJSONString(json);
+                    GlobalData.mParser.setJSONString(json);
                 } catch (UnsupportedEncodingException e1) {
                     e1.printStackTrace();
                 }
