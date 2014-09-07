@@ -42,8 +42,8 @@ public class SubMenu extends Activity{
         getActionBar().setSubtitle("Курск");
         getActionBar().setTitle(getIntent().getExtras().getString("MenuType","Menu"));
 
-        int c = getResources().getColor(R.color.actionbar_background);
-        getActionBar().setBackgroundDrawable(new ColorDrawable(c));
+        int color = getResources().getColor(R.color.actionbar_background);
+        getActionBar().setBackgroundDrawable(new ColorDrawable(color));
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 

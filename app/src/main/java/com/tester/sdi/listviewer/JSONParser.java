@@ -23,52 +23,40 @@ public class JSONParser {
     public static boolean isRefreshFinished = false;
     public static boolean isFirstRun = true;
 
-    private List<String> mainMenuNames = new ArrayList<String>();
-    private List<String> mainMenuPicSource = new ArrayList<String>();
-    private List<Integer> mainMenuItemSize = new ArrayList<Integer>();
-    private List<Bitmap> mainMenuBitmaps = new ArrayList<Bitmap>();
+    private int itemsCount = 0;
+    public int getItemsCount(){return itemsCount;}
 
-    private List<ArrayList<String>> subMenuNames = new ArrayList<ArrayList<String>>();
-    private List<ArrayList<Float>> subMenuPrices = new ArrayList<ArrayList<Float>>();
-    private List<ArrayList<String>> subMenuChunks = new ArrayList<ArrayList<String>>();
-    private List<ArrayList<Bitmap>> subMenuBitmaps = new ArrayList<ArrayList<Bitmap>>();
-    private List<ArrayList<String>> subMenuPicSources = new ArrayList<ArrayList<String>>();
+    private List<MainMenuItem> mainMenuItems = new ArrayList<MainMenuItem>();
 
-    private String toParse = "{'menu':{'count':2,'menuitems':["+
-            "{'name':'pizza','src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg',"+
-                " 'count':3,'submenu':[{'name':'italia', 'price':55, 'chunk':'chunk', 'src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg'},"+
-                                      "{'name':'prima', 'price':54, 'chunk':'full', 'src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg'},"+
-                                      "{'name':'assorti', 'price':54, 'chunk':'chunk', 'src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg'}]},"+
-            "{'name':'drink', 'src':'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg',"+
-                "'count':0,'submenu':[]}]}}";
+    private String toParse = GlobalData.JSONDefault;
 
-    public List<String> getMainMenuNames(){return mainMenuNames;}
-    public List<String> getMainMenuPicSource(){return mainMenuPicSource;}
-    public List<Integer> getMainMenuItemSize(){return mainMenuItemSize;}
-
-    public List<ArrayList<String>> getSubMenuNames()     {return subMenuNames;}
-    public List<ArrayList<Float>>  getSubMenuPrices()    {return subMenuPrices;}
-    public List<ArrayList<String>> getSubMenuChunks()    {return subMenuChunks;}
-    public List<ArrayList<String>> getSubMenuPicSources(){return subMenuPicSources;}
-    public List<ArrayList<Bitmap>> getSubMenuBitmaps()   {return subMenuBitmaps;}
-
+    public List<MainMenuItem> getMainMenuItems(){return mainMenuItems;}
     public void setJSONString (String json){
         toParse = json;
     }
-    public void AddBitmap(Bitmap bmp ,int pos){
-        subMenuBitmaps.get(pos).add(bmp);
-    }
 
-    public List<Bitmap> getMainMenuBitmaps(){return mainMenuBitmaps;}
-    public void AddMainMenuBitmap(Bitmap bmp){
-        mainMenuBitmaps.add(bmp);
+    public List<Bitmap> getMainMenuBitmaps(){
+        List<Bitmap> ret = new ArrayList<Bitmap>();
+        for (MainMenuItem item : mainMenuItems){
+            ret.add(item.getPic());
+        }
+        return ret;
     }
-    public void AddMainMenuBitmap(Bitmap bmp, String name){
+    public void addMainMenuBitmap(int mainMenuItemsIndex, Bitmap bmp){
+        MainMenuItem item = mainMenuItems.get(mainMenuItemsIndex);
+        String name = item.getName();
+        addMainMenuBitmap(item, bmp, name);
+    }
+    public void addMainMenuBitmap(MainMenuItem item, Bitmap bmp){
+        String name = item.getName();
+        addMainMenuBitmap(item, bmp, name);
+    }
+    public void addMainMenuBitmap(MainMenuItem item, Bitmap bmp, String name){
         if (bmp != null) {
-            mainMenuBitmaps.add(bmp);
+            item.setPic(bmp);
             saveBitmapToFile(bmp, name);
         } else{
-            mainMenuBitmaps.add(loadBitmapFromFile(name));
+            item.setPic(loadBitmapFromFile(name));
         }
     }
 
@@ -110,11 +98,11 @@ public class JSONParser {
         }
     }
 
-    public void Parse(){
+    public void parse(){
         try {
-            mainMenuPicSource.clear();
+            mainMenuItems.clear();
 
-             JSONArray rootArr = new JSONArray(toParse);
+            JSONArray rootArr = new JSONArray(toParse);
 
             int n = rootArr.length();
             for (int i=0;i<n;++i){
@@ -122,9 +110,9 @@ public class JSONParser {
                 String name = rootArr.getJSONObject(i).getString("name");
                 String id = rootArr.getJSONObject(i).getString("id");
 
-                mainMenuNames.add(name);
-                mainMenuItemSize.add(Integer.parseInt(id));
-                mainMenuPicSource.add(url);
+                MainMenuItem toAdd =
+                        new MainMenuItem(name, Integer.parseInt(id), url, "main_menu_item"+name);
+                mainMenuItems.add(toAdd);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -132,54 +120,6 @@ public class JSONParser {
     }
 
     public JSONParser (){
-        try {
-            mainMenuNames = new ArrayList<String>();
-            mainMenuPicSource = new ArrayList<String>();
-            mainMenuItemSize = new ArrayList<Integer>();
-
-            subMenuNames = new ArrayList<ArrayList<String>>();
-            subMenuPrices = new ArrayList<ArrayList<Float>>();
-            subMenuChunks = new ArrayList<ArrayList<String>>();
-            subMenuBitmaps = new ArrayList<ArrayList<Bitmap>>();
-            subMenuPicSources = new ArrayList<ArrayList<String>>();
-
-            JSONObject root = new JSONObject(toParse);
-
-            JSONObject menuObj = root.getJSONObject("menu");
-
-            int mainMenuItemsCount = menuObj.getInt("count");
-            JSONArray mainMenuItems = menuObj.getJSONArray("menuitems");
-            for (int i=0;i<mainMenuItemsCount; ++i){
-                subMenuChunks.add(new ArrayList<String>());
-                subMenuPrices.add(new ArrayList<Float>());
-                subMenuNames.add(new ArrayList<String>());
-                subMenuPicSources.add(new ArrayList<String>());
-                subMenuBitmaps.add(new ArrayList<Bitmap>());
-
-                String name = mainMenuItems.getJSONObject(i).getString("name");
-                mainMenuNames.add(name);
-
-                String src = mainMenuItems.getJSONObject(i).getString("src");
-                mainMenuPicSource.add(src);
-
-                int subMenuCount = mainMenuItems.getJSONObject(i).getInt("count");
-                mainMenuItemSize.add(subMenuCount);
-                for (int j=0; j<subMenuCount; ++j){
-                    JSONArray subMenuItems = mainMenuItems.getJSONObject(i).getJSONArray("submenu");
-                    String subName = subMenuItems.getJSONObject(j).getString("name");
-                    float subPrice = (float)subMenuItems.getJSONObject(j).getDouble("price");
-                    String subChunk = subMenuItems.getJSONObject(j).getString("chunk");
-                    String subSrc = subMenuItems.getJSONObject(j).getString("src");
-
-                    subMenuChunks.get(i).add(subChunk);
-                    subMenuPrices.get(i).add(subPrice);
-                    subMenuNames.get(i).add(subName);
-                    subMenuPicSources.get(i).add(subSrc);
-                }
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        mainMenuItems.clear();
     }
 }

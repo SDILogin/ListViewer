@@ -60,14 +60,14 @@ public class MainListFragment extends ListFragment{
 
     public void udpateListView(){
         adapter = new MainMenuAdapter(getActivity().getBaseContext());
-        List<Integer> subListSizes = GlobalData.mParser.getMainMenuItemSize();
-        List<String> names = GlobalData.mParser.getMainMenuNames();
+        //List<Integer> subListSizes = GlobalData.mParser.getMainMenuItemSize();
+        //List<String> names = GlobalData.mParser.getMainMenuNames();
 
-        List<Bitmap> bitmaps = GlobalData.mParser.getMainMenuBitmaps();
-        for (int i=0; i<bitmaps.size(); ++i){
-            String name = names.get(i);
-            int subMenuItemsCount = subListSizes.get(i);
-            adapter.Add(new MainMenuItem(name, subMenuItemsCount, bitmaps.get(i)));
+        //List<Bitmap> bitmaps = GlobalData.mParser.getMainMenuBitmaps();
+        for (MainMenuItem item : GlobalData.mParser.getMainMenuItems()){
+            //String name = names.get(i);
+            //int subMenuItemsCount = subListSizes.get(i);
+            adapter.Add(item);
         }
 
         setListAdapter(adapter);
@@ -92,13 +92,14 @@ public class MainListFragment extends ListFragment{
             }
 
             //parser = new GlobalData.mParser();
-            GlobalData.mParser.Parse();
-            urls = GlobalData.mParser.getMainMenuPicSource();
-
+            GlobalData.mParser.parse();
 
             // main menu
-            for (String url : urls){
-                GlobalData.mParser.AddMainMenuBitmap(download(url));
+            String url = "";
+            for (MainMenuItem item : GlobalData.mParser.getMainMenuItems()){
+                url = item.getBmpSource();
+                GlobalData.mParser.addMainMenuBitmap(item, download(url));
+                //item.setPic(download(url));
             }
 
             // submenu
