@@ -73,25 +73,7 @@ public class MainListFragment extends ListFragment{
         setListAdapter(adapter);
     }
 
-    class MainMenuItem{
-        private String name;
-        private int count;
-        private Bitmap pic;
 
-        public Bitmap getPic(){return pic;}
-        public String getName(){return name;}
-        public int getCount(){return count;}
-
-        public void setPic(Bitmap bmp){this.pic = bmp;}
-        public void setName(String name){this.name = name;}
-        public void setCount(int count){this.count = count;}
-
-        public MainMenuItem(String name, int count, Bitmap bmp){
-            this.name  = name;
-            this.count = count;
-            this.pic   = bmp;
-        }
-    }
 
     class MainMenuAdapter extends ArrayAdapter<MainMenuItem>{
 
